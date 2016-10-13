@@ -17,7 +17,6 @@ class Flight < ActiveRecord::Base
     flight.save
   end
 
-
   def mostrar_filtro(val1, val2, val3)
     flight_show = Flight.where(from: val1, to: val2, date: val3).order(id: :asc)
   end

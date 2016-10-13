@@ -40,11 +40,12 @@ class FlightsController
 
 
      p "Registro Terminado Con Exito!"
+      pasajero_data = @booking.pasajero_x_reservacion(reservacion)
      puts
      p "::::::::::::::::::::::::Ticket::::::::::::::::::::::::"
-     for i in 0..(val4.to_i)
+     for i in 0...(val4.to_i)
       @view.mostrar_seleccion(@flight.mostrar_seleccion(datoID))
-      @view.pasajero_x_reservacion(@booking.pasajero_x_reservacion(i, 501),i)
+      @view.pasajero_x_reservacion(pasajero_data[i], i+1)
       puts "No de Reservacion: #{reservacion}"
       p ":::::::::::::::::::::::::::::::::::::::::::::::::::::::"
     end
@@ -53,6 +54,9 @@ class FlightsController
       costo_viaje = (x.precio[1..-1].to_i)
       p "::::::::::::::::::::::::::::::TOTAL: #{costo_viaje*val4.to_i}"
     end
+
+    p "Desea terminar reservaciones?"
+    respuesta_a_continuar = respuesta_vuelo
   end
   end #termina aquí
 

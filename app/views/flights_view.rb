@@ -1,8 +1,13 @@
 class FlightsView
 
-  def menu
+  def menu_usuario
     puts "1. Mostrar todos los vuelos"
     puts "2. Buscar vuelo por From, To, Date, Passengers"
+  end
+
+  def menu_adm
+    puts "1. Mostrar todos los vuelos"
+    puts "2. Crear Vuelo"
     puts "3. Borrar reservacion"
     puts "4. Actualizar reservacion"
   end
@@ -31,10 +36,10 @@ class FlightsView
   end
  
   def pasajero_x_reservacion(reservacion,pasajero)
-    reservacion.each do |x|
-         puts "::::::::::::::::Pasajero #{pasajero}: #{x.nombre_p}"
-         puts "::::::::Correo: #{x.correo_p}"
-    end
+#    reservacion.each do |x|
+         puts "::::::::::::::::Pasajero #{pasajero}: #{reservacion.nombre_p}"
+         puts "::::::::Correo: #{reservacion.correo_p}"
+ #   end
          puts
   end
 

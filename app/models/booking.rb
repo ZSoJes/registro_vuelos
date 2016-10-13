@@ -10,8 +10,9 @@ class Booking < ActiveRecord::Base
     book.save
 end
 
-def pasajero_x_reservacion(id, reserv)
-    pasajero = Booking.where(id: id, no_reservacion: reserv)
+def pasajero_x_reservacion(reserv)
+    pasajero = Booking.where(no_reservacion: reserv)
 end
+
 
 end
