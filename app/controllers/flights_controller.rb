@@ -1,6 +1,7 @@
 class FlightsController
-  def initialize(args)
-    @args = args
+  def initialize
+    # (args)
+    # @args = args
     @flight = Flight.new
     @booking = Booking.new
     @view = FlightsView.new
@@ -14,68 +15,113 @@ class FlightsController
 
   def mostrar_filtro(val1, val2, val3, val4)
    datoID = @view.mostrar_filtro(@flight.mostrar_filtro(val1, val2, val3),val4)  
+   if datoID != []
+     p "desea reservar este vuelo?(introduzca si o no)"
+     resp = respuesta
 
-   p "desea reservar este vuelo?(introduzca si o no)"
-   resp = respuesta_vuelo
+     if resp == 'si' or resp == 'Si'
+       reservacion = rand(0..1000)
+       print "\n\n#{"*"*52}\n\n"
+       @view.mostrar_seleccion(@flight.mostrar_seleccion(datoID))
 
-   if resp == 'si' or resp == 'Si'
-     reservacion = rand(0..1000)
-     print "\n\n"
-     puts "*"*52
-     print "\n\n"
-     @view.mostrar_seleccion(@flight.mostrar_seleccion(datoID))
+       @flight.update(datoID, val4)
 
-     @flight.update(datoID, val4)
+       for i in 1..(val4.to_i)
+         p "Pasajero Num. #{i}:"
+         print "\n\tIntroduzca su nombre: "
+         nombre = respuesta
+         print "\n\tIngrese su correo: "
+         correo = respuesta         
+         @booking.add(datoID, reservacion, nombre, correo)
+         print "\n#{"*"*52}\n"
+       end
 
-     for i in 1..(val4.to_i)
-       p "Pasajero Num. #{i}:"
-       print "\n\tIntroduzca su nombre: "
-       nombre = registro_pasajero
-       print "\n\tIngrese su correo: "
-       correo = registro_pasajero         
-       @booking.add(datoID, reservacion, nombre, correo)
-       puts "*"*52
+       anima
+       p "Registro Terminado Con Exito!"
+       pasajero_data = @booking.pasajero_x_reservacion(reservacion)
        puts
-     end
+       puts "::::::::::::::::::::::::Ticket::::::::::::::::::::::::"
+       for i in 0...(val4.to_i)
+         @view.mostrar_seleccion(@flight.mostrar_seleccion(datoID))
+         @view.pasajero_x_reservacion(pasajero_data[i], i+1)
+         puts "No de Reservacion: #{reservacion}\n"
+         puts ":::::::::::::::::::::::::::::::::::::::::::::::::::::::"
+       end
 
+       @flight.precio_v(datoID).each do |x|
+        costo_viaje = (x.precio[1..-1].to_i)
+        puts "\n::::::::::::::::::::::::::::::TOTAL: #{costo_viaje*val4.to_i}"
+      end
 
-     p "Registro Terminado Con Exito!"
-      pasajero_data = @booking.pasajero_x_reservacion(reservacion)
-     puts
-     p "::::::::::::::::::::::::Ticket::::::::::::::::::::::::"
-     for i in 0...(val4.to_i)
-      @view.mostrar_seleccion(@flight.mostrar_seleccion(datoID))
-      @view.pasajero_x_reservacion(pasajero_data[i], i+1)
-      puts "No de Reservacion: #{reservacion}"
-      p ":::::::::::::::::::::::::::::::::::::::::::::::::::::::"
+      p "Desea terminar reservaciones(Si-No)?"
+      continuar = respuesta
+      if continuar == 'si' or continuar == 'Si'
+        anima
+        usuario
+      else
+        anima
+        compra
+      end
     end
-
-    @flight.precio_v(datoID).each do |x|
-      costo_viaje = (x.precio[1..-1].to_i)
-      p "::::::::::::::::::::::::::::::TOTAL: #{costo_viaje*val4.to_i}"
+    else
+      puts "El vuelo que desea no se encuentra disponible\n"
+      puts "A continuacion cargara el menu"
+      sleep(4.0)
+      anima
     end
-
-    p "Desea terminar reservaciones?"
-    respuesta_a_continuar = respuesta_vuelo
-  end
   end #termina aquí
 
-  def respuesta_vuelo
+  def compra
+    p "Introduzca Origen del Vuelo"
+    val1 = respuesta
+    p "Introduzca Destino"
+    val2 = respuesta
+    p "Fecha del vuelo"
+    val3 = respuesta
+    p "Lugares que desea reservar"
+    val4 = respuesta
+    mostrar_filtro(val1 ,val2, val3, val4)
+  end
+
+  def usuario
+    @view.menu_usuario
+    menu = respuesta
+
+    while menu != "3"
+      if menu == "1"
+        index
+      elsif menu == "2"
+        compra
+      end
+      @view.menu_usuario
+      menu = respuesta
+    end
+  end
+
+  def respuesta
     resp = STDIN.gets.chomp
     return resp
   end
 
-  def registro_pasajero
-    reg = STDIN.gets.chomp
-    return reg
+  def anima
+    print "\e[2J"
+    print "\e[H"
   end
 
   def execute
-    if @args[0] == "index"
-      index
-    elsif @args[0] == "reserva_vuelo"
-      mostrar_filtro(@args[1], @args[2], @args[3], @args[4])
-    end
+  @view.session
+  session = respuesta
+  anima
+  case session
+  when 'a', 'A' then
+    @view.session_t('Cliente')
+    usuario
+  when 'b', 'B' then
+    @view.session_t('Administrador')
+    @view.menu_admin
+  else
+    "Try again or write exit"
+  end
   end
 
 end

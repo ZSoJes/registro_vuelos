@@ -1,3 +1,3 @@
 require_relative 'config/application'
 
-FlightsController.new(ARGV)
+FlightsController.new#(ARGV)
